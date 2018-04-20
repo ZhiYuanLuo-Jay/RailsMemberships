@@ -1,0 +1,34 @@
+<p style="margin-left:900px;"><a style="margin-left:10px;" href="/users/logout">Logout</a></p>
+
+<h3>Hi, <%=current_user.first_name%> <%=current_user.last_name%>!</h3>
+
+<div class="info-left" style="display:inline-block; vertical-align:top; margin-left: 10px;">
+    <h3>Here are the organizations you may join:</h3> 
+    <% @groups.each do |g| %>
+        <a href="/groups/<%= g.id %>"><%= g.name %></a>
+        <% if Group.find(g.id).user_id == current_user.id %>
+            <a style="margin-left: 20px; text-decoration: none;" href="/groups/<%=g.id%>" data-method="delete">X</a>     
+        <% end %>
+        <p style="margin-left: 10px;">Members: <%= Group.find(g.id).memberships.size  %></p>
+        <p style="margin-left: 10px;"><%= g.description %></p>
+        <br>
+    <% end %>
+</div>
+
+<div class="info-right" style="display:inline-block; vertical-align:top; margin-left: 100px; width: 400px; height: 250px; border: 1px solid black; padding: 20px;">
+    <h5>Create a new organization:</h5>
+    <form action="/groups/create" method="post">
+        <input type='hidden' name="authenticity_token" value="<%=form_authenticity_token%>">
+        <div>
+            <p style="display:inline-block; width:100px;">Org Name: </p>
+            <input type="text" name="group[name]">
+        </div>
+
+        <div>
+            <p style="display:inline-block; width:100px;">Description: </p>
+            <textarea rows="4" cols="30" name="group[description]"></textarea>
+        </div>
+        <br>
+        <input style="margin-left:350px;" type="submit" value="Create">
+    </form>
+</div>

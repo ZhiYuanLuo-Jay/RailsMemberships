@@ -1,0 +1,24 @@
+<p style="margin-left:700px;"><a href="/groups">Dashboard</a> <a style="margin-left:10px;" href="/users/logout">Logout</a></p>
+
+<h2 style="display:inline-block; margin-right:20px;"><%= @group.name %></h2>
+
+<% if Group.find(@group.id).users.exists?(current_user.id) %>
+    <a href="/memberships/<%=@group.id%>" data-method="delete">Leave Group</a>   
+<% else %>
+    <form style="display:inline-block;" action="/memberships/<%=@group.id%>" method="post">
+        <input type='hidden' name="authenticity_token" value="<%=form_authenticity_token%>">
+        <input type="submit" value="Join Group">
+    </form>    
+<% end %>
+
+<p><%= @group.description %></p>
+<% if Group.find(@group.id).user_id == current_user.id %>
+    <h3>Created By: YOU</h3>
+<% else %>
+    <h3>Created By: <%= User.find(Group.find(@group.id).user_id).first_name %></h3>
+<% end %>
+
+<h3>Members:</h3>
+<% Group.find(@group.id).users.each do |usr|%>
+    <p style="margin-left:20px;"><%= usr.first_name%> <%= usr.last_name%></p>
+<% end %>
